@@ -19,9 +19,12 @@ class ProductManager {
 
     const validateCode = this.array.find((el) => el.code === code);
 
-    this.validateData( !title || !description || !price || !thumbnail || !stock || !code, "campos incompletos" );
+    this.validateData(
+      !title || !description || !price || !thumbnail || !stock || !code,
+      "campos incompletos"
+    );
 
-    this.validateData( validateCode, "el code ${validateCode.code} ya existe" )
+    this.validateData(validateCode, "el code ya existe");
 
     id = this.array.length === 0 ? 1 : this.array[this.array.length - 1].id + 1;
 
@@ -37,16 +40,9 @@ class ProductManager {
     }
   };
 
-  // validateFile = () => {
-  //   if (!fs.existsSync(this.path)) {
-  //     console.log("file not found");
-  //     return;
-  //   }
-  // };
 
   getProduct = async () => {
-    // this.validateFile();
-    this.validateData(!fs.existsSync(this.path), "file not found")
+    this.validateData(!fs.existsSync(this.path), "file not found");
 
     try {
       let readFile = JSON.parse(
@@ -59,8 +55,7 @@ class ProductManager {
   };
 
   getProductById = async (id) => {
-    // this.validateFile();
-    this.validateData(!fs.existsSync(this.path), "file not found")
+    this.validateData(!fs.existsSync(this.path), "file not found");
 
     let readFile = JSON.parse(
       await fs.promises.readFile(this.path, this.format)
@@ -70,25 +65,15 @@ class ProductManager {
     search ? console.log(search) : console.log("Not found");
   };
 
-  // updateProduct = async ( id, title, description, price, thumbnail, code, stock ) => {
-  updateProduct = async (
-    id,
-    title,
-    description,
-    price,
-    thumbnail,
-    code,
-    stock
-  ) => {
-    // this.validateFile();
-    this.validateData(!fs.existsSync(this.path), "file not found")
+  updateProduct = async ( id, title, description, price, thumbnail, code, stock ) => {
+    this.validateData(!fs.existsSync(this.path), "file not found");
 
     let readdFileToUpdate = await fs.promises.readFile(this.path, this.format);
     readdFileToUpdate = JSON.parse(readdFileToUpdate);
 
     const itemFounded = readdFileToUpdate.filter((item) => item.id === id);
 
-    this.validateData(!itemFounded, "id not found")
+    this.validateData(!itemFounded, "id not found");
 
     const nuevoItem = {
       id: id,
@@ -125,9 +110,7 @@ class ProductManager {
   };
 
   deleteProduct = async (id) => {
-    // this.validateFile();
-    this.validateData(!fs.existsSync(this.path), "file not found")
-
+    this.validateData(!fs.existsSync(this.path), "file not found");
 
     const readdFile = JSON.parse(
       await fs.promises.readFile(this.path, this.format)
@@ -135,7 +118,7 @@ class ProductManager {
 
     const deleteItem = readdFile.find((item) => item.id === id);
 
-    this.validateData(!deleteItem, "Not found")
+    this.validateData(!deleteItem, "Not found");
 
     let newArray = readdFile.filter((item) => item.id != id);
 
@@ -175,7 +158,7 @@ manager.addProduct(
   35
 );
 
-manager.getProduct()
+manager.getProduct();
 
 manager.getProductById(2);
 
@@ -183,11 +166,10 @@ manager.deleteProduct(2);
 
 manager.updateProduct(
   1,
-  'p',
-  'd',
+  "p",
+  "d",
   3000,
-  'https://www.pexels.com/es-es/buscar/foto/',
+  "https://www.pexels.com/es-es/buscar/foto/",
   7,
   35
 );
-
