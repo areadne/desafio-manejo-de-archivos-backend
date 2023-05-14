@@ -1,0 +1,29 @@
+[
+	{
+		"id": 2,
+		"title": "titulo 3",
+		"description": "descripcion 3",
+		"price": 3000,
+		"thumbnail": "https://www.pexels.com/es-es/buscar/foto/",
+		"code": 3,
+		"stock": 35
+	},
+	{
+		"id": 3,
+		"title": "titulo 4",
+		"description": "descripcion 4",
+		"price": 3000,
+		"thumbnail": "https://www.pexels.com/es-es/buscar/foto/",
+		"code": 7,
+		"stock": 35
+	},
+	{
+		"id": 1,
+		"title": "p",
+		"description": "d",
+		"price": 3000,
+		"thumbnail": "https://www.pexels.com/es-es/buscar/foto/",
+		"code": 7,
+		"stock": 35
+	}
+]
