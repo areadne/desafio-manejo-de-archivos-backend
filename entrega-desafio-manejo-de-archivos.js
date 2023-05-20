@@ -1,6 +1,6 @@
 import fs, { read } from "fs";
 
-class ProductManager {
+export class ProductManager {
   constructor(path) {
     this.path = path;
     this.format = "utf-8";
@@ -12,6 +12,14 @@ class ProductManager {
       console.log(stringToShow);
       return;
     }
+  };
+
+  readJSON = async () => {
+    return JSON.parse(await fs.promises.readFile(this.path, this.format));
+  };
+
+  writeFileFunction = async (array) => {
+    await fs.promises.writeFile(this.path, JSON.stringify(array, null, "\t"));
   };
 
   addProduct = async (title, description, price, thumbnail, code, stock) => {
@@ -31,23 +39,17 @@ class ProductManager {
     this.array.push({ id, title, description, price, thumbnail, code, stock });
 
     try {
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(this.array, null, "\t")
-      );
+      this.writeFileFunction(this.array);
     } catch (error) {
       console.error("ha ocurrido un error con el archivo", error);
     }
   };
 
-
   getProduct = async () => {
     this.validateData(!fs.existsSync(this.path), "file not found");
 
     try {
-      let readFile = JSON.parse(
-        await fs.promises.readFile(this.path, this.format)
-      );
+      let readFile = await this.readJSON();
       console.log(readFile);
     } catch (error) {
       console.error(error);
@@ -57,19 +59,27 @@ class ProductManager {
   getProductById = async (id) => {
     this.validateData(!fs.existsSync(this.path), "file not found");
 
-    let readFile = JSON.parse(
-      await fs.promises.readFile(this.path, this.format)
-    );
+    let readFile = await this.readJSON();
 
-    const search = readFile.find((el) => el.id === id);
-    search ? console.log(search) : console.log("Not found");
+    let search = readFile.find((el) => el.id === id);
+
+    search ? search : search = "Not found";
+    
+    return search
   };
 
-  updateProduct = async ( id, title, description, price, thumbnail, code, stock ) => {
+  updateProduct = async (
+    id,
+    title,
+    description,
+    price,
+    thumbnail,
+    code,
+    stock
+  ) => {
     this.validateData(!fs.existsSync(this.path), "file not found");
 
-    let readdFileToUpdate = await fs.promises.readFile(this.path, this.format);
-    readdFileToUpdate = JSON.parse(readdFileToUpdate);
+    let readdFileToUpdate = await this.readJSON();
 
     const itemFounded = readdFileToUpdate.filter((item) => item.id === id);
 
@@ -92,19 +102,14 @@ class ProductManager {
     if (otherItemInArray.length === 0) {
       newArray = [nuevoItem];
 
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(newArray, null, "\t")
-      );
+      this.writeFileFunction(newArray);
 
       this.getProduct();
     } else {
       newArray = [...otherItemInArray, nuevoItem];
 
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(newArray, null, "\t")
-      );
+      this.writeFileFunction(newArray);
+
       this.getProduct();
     }
   };
@@ -112,64 +117,59 @@ class ProductManager {
   deleteProduct = async (id) => {
     this.validateData(!fs.existsSync(this.path), "file not found");
 
-    const readdFile = JSON.parse(
-      await fs.promises.readFile(this.path, this.format)
-    );
+    const readFile = await this.readJSON();
 
-    const deleteItem = readdFile.find((item) => item.id === id);
+    const deleteItem = readFile.find((item) => item.id === id);
 
     this.validateData(!deleteItem, "Not found");
 
-    let newArray = readdFile.filter((item) => item.id != id);
+    let newArray = readFile.filter((item) => item.id != id);
 
     this.array.push(newArray);
 
-    return await fs.promises.writeFile(
-      this.path,
-      JSON.stringify(newArray, null, "\t")
-    );
+    this.writeFileFunction(newArray);
   };
 }
 
-const manager = new ProductManager("./archivo.json");
+// const manager = new ProductManager("./archivo.json");
 
-manager.addProduct(
-  "titulo 2",
-  "descripcion 2",
-  5000,
-  "https://www.pexels.com/es-es/buscar/foto/",
-  4,
-  25
-);
-manager.addProduct(
-  "titulo 3",
-  "descripcion 3",
-  3000,
-  "https://www.pexels.com/es-es/buscar/foto/",
-  3,
-  35
-);
-manager.addProduct(
-  "titulo 4",
-  "descripcion 4",
-  3000,
-  "https://www.pexels.com/es-es/buscar/foto/",
-  7,
-  35
-);
+// manager.addProduct(
+//   "titulo 2",
+//   "descripcion 2",
+//   5000,
+//   "https://www.pexels.com/es-es/buscar/foto/",
+//   4,
+//   25
+// );
+// manager.addProduct(
+//   "titulo 3",
+//   "descripcion 3",
+//   3000,
+//   "https://www.pexels.com/es-es/buscar/foto/",
+//   3,
+//   35
+// );
+// manager.addProduct(
+//   "titulo 4",
+//   "descripcion 4",
+//   3000,
+//   "https://www.pexels.com/es-es/buscar/foto/",
+//   7,
+//   35
+// );
 
-manager.getProduct();
+// manager.getProduct();
 
-manager.getProductById(2);
+// console.log(await manager.getProductById(2));
 
-manager.deleteProduct(2);
+// manager.deleteProduct(1);
 
-manager.updateProduct(
-  1,
-  "p",
-  "d",
-  3000,
-  "https://www.pexels.com/es-es/buscar/foto/",
-  7,
-  35
-);
+// manager.updateProduct(
+//   3,
+//   "p",
+//   "d",
+//   3000,
+//   "https://www.pexels.com/es-es/buscar/foto/",
+//   7,
+//   35
+// );
