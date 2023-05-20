@@ -1,6 +1,6 @@
 import express, { json } from "express";
 import "./archivo.json" assert { type: "json" };
-import { ProductManager } from "./entrega-desafio-manejo-de-archivos.js";
+import { ProductManager } from "./productManager.js";
 
 const manager = new ProductManager("./archivo.json");
 
